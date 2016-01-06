@@ -11,95 +11,10 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js" type="text/javascript"></script>
   <script src="./bower_components/colorwheel/colorwheel.js" type="text/javascript"></script>
 
-  <style type="text/css" media="screen">
-    body {
-      background:#FFF;
-      font:14px/20px helvetica, arial;
-      text-align:center;
-      margin:40px;
-      color:#666;
-    }
-
-    a {
-      color:#F60;
-    }
-
-    .demo {
-      text-align:left;
-      width:600px;
-      margin:0 auto;
-      padding:20px;
-      background:#FFFFEE;
-      -moz-box-shadow: #a6a6a6 0px 0px 4px;
-      box-shadow: #a6a6a6 0px 0px 4px;
-      -webkit-box-shadow: #a6a6a6 0px 0px 4px;
-    }
-    input {
-      font-family: monospace;
-      font-size:16px;
-    }
-    .swatch {
-      padding:10px;
-    }
-    .method {
-      margin-bottom:20px;
-    }
-    .code p{margin:0; padding:0; display:none;}
-
-    .source {
-      font-size:10px;
-      line-height:14px;
-    }
-
-    .example, .code {
-      margin:10px 0;
-      padding:10px 0;
-      border-top:2px #CCC solid;
-    }
-    h2 {
-      font-size:16px;
-    }
-    h1 {
-      color:#000;
-    }
-    .example h2, .example p {
-      margin:0 0 10px;
-    }
-     .example p {
-       width:300px;
-     }
-    .method b {
-      color:#2e5478;
-    }
-
-    .method div {
-      width:400px;
-    }
-
-    code {
-      display:none;
-      background:#FFF;
-      padding:10px;
-    }
-
-    .returns {
-      color:#237210;
-    }
-
-    .show_source {
-      margin:20px 0 0;
-      color:#999;
-      text-decoration:underline;
-      cursor:pointer;
-    }
-
-
-  </style>
 </head>
 
 <body>
-
-      <div id="size_example">
+      <div id="callback_example">
         <div style="float:center; width:100%">
           <div class="colorwheel_large" style="text-align:left; float:center;margin-right:30px;"></div>
         </div>
@@ -110,36 +25,26 @@
 
 function set_source(f, target){
     f();
-    target.text(f.toString())
-}
-
-function size_example(){
-  Raphael.colorwheel($("#size_example .colorwheel_large")[0],350, 300).color("#0F0");
+//    target.text(f.toString())
 }
 
 function callback_example(){
-  var cw = Raphael.colorwheel($("#callback_example .colorwheel")[0],150),
-      onchange_el = $("#callback_example .onchange"),
-      ondrag_el = $("#callback_example .ondrag");
-      cw.color("#F00");
+  var xhttp = new XMLHttpRequest();
+  var cw = Raphael.colorwheel($("#callback_example .colorwheel_large")[0],350, 300)
+  cw.color("#F00");
 
-  function start(){ondrag_el.show()}
-  function stop(){ondrag_el.hide()}
+  function start(){console.log("START")}
+  function stop(color) {
+      console.log(color.hex.substring(1))
+      xhttp.open("POST", '/', true);
+      xhttp.send(color.hex.substring(1).toUpperCase())
+  }
 
   cw.ondrag(start, stop);
-  cw.onchange(function(color)
-    {
-      var colors = [parseInt(color.r), parseInt(color.g), parseInt(color.b)]
-      onchange_el.css("background", color.hex).text("RGB:"+colors.join(", "))
-    })
-
 }
 
 $(document).ready(function(){
-    set_source(size_example, $("#size_example .source"))
-    $(".show_source").click(function(){
-        $(this).parents().filter('.example').find("code").slideDown();
-    });
+    set_source(callback_example, $("#callback_example .source"))
 })
 
     </script>
